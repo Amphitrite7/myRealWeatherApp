@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="src/styles.css" />
+    <title>My Weather</title>
+  </head>
+  <style>
+    body {
+      background: #f9f7fe;
+      font-family: "Roboto", sans-serif;
+    }
+
+    a {
+      color: #885df1;
+    }
+
+    .weather-app {
+      background: white;
+      max-width: 600px;
+      margin: 60px auto;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 30px 50px rgba(65, 50, 100, 0.08);
+    }
+
+    header {
+      border-bottom: 1px solid #f9f7fe;
+      padding-bottom: 30px;
+    }
+
+    .search-input {
+      background-color: #f9f7fe;
+      border: none;
+      color: rgba(39, 33, 66, 0.4);
+      font-size: 16px;
+      padding: 20px;
+      width: 75%;
+      border-radius: 6px;
+    }
+
+    .search-button {
+      margin-left: 5px;
+      font-size: 16px;
+      background-color: #885df1;
+      color: white;
+      border: none;
+      padding: 20px;
+      line-height: 1;
+      border-radius: 5px;
+    }
+
+    main {
+      padding: 30px 0;
+    }
+
+    .current-temperature {
+      font-size: 48px;
+    }
+
+    .current-weather {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .current-city {
+      font-size: 38px;
+      font-weight: 900;
+      margin: 0;
+    }
+    .current-details {
+      color: rgba(39, 33, 66, 0.4);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 24px;
+    }
+
+    .current-details strong {
+      color: #f65282;
+    }
+
+    .current-temperature-icon {
+      position: relative;
+      top: -8px;
+      font-size: 40px;
+      margin-right: 10px;
+    }
+
+    .current-temperature-value {
+      font-size: 80px;
+      font-weight: bold;
+    }
+
+    .current-temperature-unit {
+      font-size: 28px;
+      position: relative;
+      top: -38px;
+    }
+
+    footer {
+      border-top: 1px solid #f9f7fe;
+      text-align: center;
+      padding-top: 15px;
+
+      color: rgba(39, 33, 66, 0.4);
+    }
+  </style>
+  <body>
+    <div class="weather-app">
+      <header>
+        <form id="search-form">
+          <input
+            type="search"
+            placeholder="Enter a city.."
+            required
+            class="search-input"
+            id="search-input"
+          />
+          <input type="submit" value="Search" class="search-button" />
+        </form>
+      </header>
+      <main>
+        <div class="current-weather">
+          <div>
+            <h1 class="current-city" id="current-city">Paris</h1>
+            <p class="current-details">
+              <span id="current-date"></span>, moderate rain <br />
+              Humidity: <strong id="humidity">87%</strong>, Wind:
+              <strong id="wind">7.2km/h</strong>
+            </p>
+          </div>
+          <div class="current-temperature">
+            <span class="current-temperature-icon" id="weather-icon">☀️</span>
+            <span class="current-temperature-value" id="temperature">24</span>
+            <span class="current-temperature-unit">°C</span>
+          </div>
+        </div>
+      </main>
+      <footer>
+        <p>
+          This project was coded by
+          <a href="https://github.com/Amphitrite7/" target="_blank"
+            >Dagmawit Kenea Kuma</a
+          >
+          and is
+          <a
+            href="https://github.com/Amphitrite7/myRealWeatherApp"
+            target="_blank"
+          >
+            on GitHub</a
+          >
+          and
+          <a href="" target="_blank">hosted on Netlify</a>
+        </p>
+      </footer>
+    </div>
+    <script>
+      function search(event) {
+        event.preventDefault();
+        let searchInputElement = document.querySelector("#search-input");
+        let cityElement = document.querySelector("#current-city");
+        let city = searchInputElement.value;
+
+        let apiKey = "038fab0d64f386c58bd20f6d0390444d";
+        let apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`;
+
+        axios.get(apiUrl).then(showWeather);
+      }
+
+      function formatDate(date) {
+        let minutes = date.getMinutes();
+        let hours = date.getHours();
+        let day = date.getDay();
+        let dateOfMonth = date.getDate();
+        let month = date.getMonth();
+        let year = date.getFullYear();
+
+        if (minutes < 10) {
+          minutes = `0${minutes}`;
+        }
+
+        if (hours < 10) {
+          hours = `0${hours}`;
+        }
+
+        let days = [
+          "Sunday",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+        ];
+
+        let months = [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ];
+
+        let formattedDay = days[day];
+        let formattedMonth = months[month];
+        return `${formattedDay}, ${formattedMonth} ${dateOfMonth}, ${year} ${hours}:${minutes}`;
+      }
+
+      function showWeather(response) {
+        let cityElement = document.querySelector("#current-city");
+        let dateElement = document.querySelector("#current-date");
+        let temperatureElement = document.querySelector("#temperature");
+        let humidityElement = document.querySelector("#humidity");
+        let windElement = document.querySelector("#wind");
+        let weatherIconElement = document.querySelector("#weather-icon");
+
+        let temperature = Math.round(response.data.main.temp);
+        let city = response.data.name;
+        let description = response.data.weather[0].description;
+        let humidity = response.data.main.humidity;
+        let wind = Math.round(response.data.wind.speed * 3.6); // Convert from m/s to km/h
+        let weatherIcon = getWeatherEmoji(response.data.weather[0].main);
+
+        let currentDate = new Date();
+        dateElement.innerHTML = formatDate(currentDate);
+
+        cityElement.innerHTML = city;
+        temperatureElement.innerHTML = temperature;
+        humidityElement.innerHTML = `${humidity}%`;
+        windElement.innerHTML = `${wind} km/h`;
+        weatherIconElement.innerHTML = weatherIcon;
+        document.querySelector(".current-details").innerHTML = `
+          ${description} <br />
+          Humidity: <strong>${humidity}%</strong>, Wind: <strong>${wind} km/h</strong>
+        `;
+      }
+
+      function getWeatherEmoji(weatherMain) {
+        const weatherEmojiMap = {
+          Clear: "☀️",
+          Clouds: "☁️",
+          Rain: "🌧️",
+          Drizzle: "🌦️",
+          Thunderstorm: "⛈️",
+          Snow: "❄️",
+          Mist: "🌫️",
+          Smoke: "🌫️",
+          Haze: "🌫️",
+          Dust: "🌫️",
+          Fog: "🌫️",
+          Sand: "🌫️",
+          Ash: "🌋",
+          Squall: "🌬️",
+          Tornado: "🌪️",
+        };
+        return weatherEmojiMap[weatherMain] || "";
+      }
+
+      let searchForm = document.querySelector("#search-form");
+      searchForm.addEventListener("submit", search);
+
+      let currentDateElement = document.querySelector("#current-date");
+      let currentDate = new Date();
+      currentDateElement.innerHTML = formatDate(currentDate);
+    </script>
+  </body>
+</html>
